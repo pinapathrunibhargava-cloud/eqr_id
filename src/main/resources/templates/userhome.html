@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>User Home | eQR ID</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* Your existing CSS remains the same */
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f4f6ff;
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        background-color: #2e3a8c;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 40px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 1.6rem;
+      }
+
+      .welcome {
+        padding: 60px 40px;
+        text-align: center;
+      }
+      .welcome h2 {
+        font-size: 2rem;
+        color: #2e3a8c;
+      }
+      .welcome p {
+        color: #555;
+        max-width: 700px;
+        margin: 10px auto 30px;
+        line-height: 1.6;
+      }
+
+      .btn {
+        background-color: #ff6b35;
+        color: white;
+        padding: 14px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .btn:hover {
+        background-color: #e95a2e;
+      }
+
+      .dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+        padding: 0 40px 60px;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        text-align: center;
+        transition: 0.3s;
+        cursor: pointer;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .card i {
+        font-size: 2rem;
+        color: #2e3a8c;
+        margin-bottom: 15px;
+      }
+
+      footer {
+        background: #2e3a8c;
+        color: white;
+        text-align: center;
+        padding: 15px;
+      }
+
+      /* Modal CSS - UPDATED FOR BETTER CENTERING */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+      .modal.active {
+        display: flex;
+      }
+      .modal-content {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 85vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        animation: modalSlideIn 0.3s ease-out;
+      }
+
+      /* Animation for modal */
+      @keyframes modalSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-50px) scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .modal-content h3 {
+        margin-top: 0;
+        color: #2e3a8c;
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+      .modal-content input,
+      .modal-content select,
+      .modal-content textarea {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 0.95rem;
+        box-sizing: border-box;
+      }
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #555;
+        background: none;
+        border: none;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+      .close-btn:hover {
+        background: #f0f0f0;
+        color: red;
+      }
+
+      /* Form grid */
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px 20px;
+      }
+      .form-item {
+        display: flex;
+        flex-direction: column;
+      }
+      .form-item.full-width {
+        grid-column: span 2;
+      }
+      .form-item label {
+        font-weight: 600;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+        color: #333;
+      }
+      .form-item input,
+      .form-item select,
+      .form-item textarea {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 0.95rem;
+        margin-bottom: 5px;
+        box-sizing: border-box;
+        transition: border 0.3s;
+      }
+      .form-item input:focus,
+      .form-item select:focus,
+      .form-item textarea:focus {
+        border-color: #2e3a8c;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(46, 58, 140, 0.1);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+      .form-actions {
+        grid-column: span 2;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+      }
+      .btn.submit {
+        background-color: #2e3a8c;
+        color: #fff;
+        padding: 12px 24px;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s;
+        border: none;
+      }
+      .btn.submit:hover {
+        background-color: #1f2766;
+      }
+      .btn.cancel {
+        background-color: #999;
+        color: #fff;
+        padding: 12px 24px;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s;
+        border: none;
+      }
+      .btn.cancel:hover {
+        background-color: #777;
+      }
+      .required {
+        color: red;
+      }
+
+      /* QR Result Modal Specific Styles */
+      #qrResultModal .modal-content {
+        text-align: center;
+        max-width: 400px;
+      }
+      .qr-image-container {
+        margin: 20px 0;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 10px;
+        display: inline-block;
+      }
+      /* Force the modal form submit button to appear styled */
+      /* Button inside modal form */
+      .form-item.full-width .btn.submit {
+        display: block; /* full width block */
+        width: 100%; /* ensure it spans the parent */
+        padding: 14px 0; /* vertical padding */
+        font-size: 1rem;
+        border-radius: 8px;
+        background-color: #2e3a8c;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.3s;
+      }
+
+      .form-item.full-width .btn.submit:hover {
+        background-color: #1f2766;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Your HTML structure remains exactly the same -->
+    <header>
+      <h1>eQR ID - Smart Identity System</h1>
+      <div class="logout">
+        <a href="logout" style="color: white; text-decoration: none">Logout</a>
+      </div>
+    </header>
+
+    <section class="welcome">
+      <h2>Welcome, <span th:text="${session.username}">User</span></h2>
+      <p>
+        Welcome to <strong>eQR ID</strong> — a modern and secure digital
+        identity system that enables instant verification of users through
+        dynamic QR codes. Generate your personal QR and stay protected.
+      </p>
+      <br />
+      <button class="btn" onclick="openModal()">Generate QR Code</button>
+    </section>
+
+    <section class="dashboard">
+      <div class="card" onclick="openModal()">
+        <i class="fa-solid fa-qrcode"></i>
+        <h3>Generate QR</h3>
+        <p>Create a new identity QR linked to your secure account.</p>
+      </div>
+      <div class="card">
+        <i class="fa-solid fa-user-shield"></i>
+        <h3>Profile Details</h3>
+        <p>View and edit your registered personal information.</p>
+      </div>
+      <div class="card" onclick="window.location.href='/history'">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        <h3>History</h3>
+        <p>Check your recent QR generations and verification history.</p>
+      </div>
+    </section>
+    <!-- QR Modal Form -->
+    <div id="qrModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h3>Enter Your Details to Generate QR</h3>
+
+        <form class="form-grid" id="qrForm">
+          <!-- Full Name -->
+          <div class="form-item">
+            <label>Full Name <span class="required">*</span></label>
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Enter your full name"
+              required
+            />
+          </div>
+
+          <!-- Age -->
+          <div class="form-item">
+            <label>Age <span class="required">*</span></label>
+            <input
+              type="number"
+              name="age"
+              placeholder="Enter your age"
+              required
+            />
+          </div>
+
+          <!-- Gender -->
+          <div class="form-item">
+            <label>Gender <span class="required">*</span></label>
+            <select name="gender" required>
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <!-- Blood Group -->
+          <div class="form-item">
+            <label>Blood Group <span class="required">*</span></label>
+            <input
+              type="text"
+              name="bloodGroup"
+              placeholder="Enter blood group"
+              required
+            />
+          </div>
+
+          <!-- Nearest Police Station -->
+          <div class="form-item">
+            <label
+              >Nearest Police Station <span class="required">*</span></label
+            >
+            <input
+              type="text"
+              name="nearestPoliceStation"
+              placeholder="Enter nearest police station"
+              required
+            />
+          </div>
+
+          <!-- Emergency Contact -->
+          <div class="form-item">
+            <label>Emergency Contact <span class="required">*</span></label>
+            <input
+              type="text"
+              name="emergencyContact"
+              placeholder="Enter emergency contact"
+              required
+            />
+          </div>
+
+          <!-- Aadhaar Number -->
+          <div class="form-item">
+            <label>Aadhaar Number <span class="required">*</span></label>
+            <input
+              type="text"
+              name="aadhaar"
+              maxlength="12"
+              placeholder="Enter Aadhaar number"
+              required
+            />
+          </div>
+          <div class="form-item">
+            <label>Vehicle Number <span class="required">*</span></label>
+            <input
+              type="text"
+              id="vehicleNo"
+              name="vehicle_number"
+              th:value="${session.vehicleNumber}"
+              readonly
+              required
+            />
+          </div>
+          <div class="form-item full-width">
+            <label>Address <span class="required">*</span></label>
+            <textarea
+              name="address"
+              placeholder="Enter your address"
+              required
+            ></textarea>
+          </div>
+          <!-- Modal Form Button -->
+          <div class="form-item full-width">
+            <button type="submit" class="btn submit">Generate QR</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- QR Result Modal -->
+    <div id="qrResultModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeQrResult()">&times;</span>
+        <h3>Your Generated QR Code</h3>
+
+        <p id="qrStatus">QR code will appear below once generated</p>
+
+        <img
+          id="qrResultImage"
+          alt="Generated QR Code"
+          style="width: 250px; height: 250px; display: block; margin: 20px auto"
+        />
+
+        <div style="text-align: center; margin-top: 20px">
+          <button
+            onclick="downloadQr()"
+            class="btn"
+            style="background-color: #2e3a8c; margin: 2px"
+          >
+            Download QR
+          </button>
+          <button
+            onclick="shareQr()"
+            class="btn"
+            style="background-color: #2e3a8c; margin: 2px"
+          >
+            Share QR
+          </button>
+          <button
+            onclick="closeQrResult()"
+            class="btn"
+            style="background-color: #2e3a8c; margin: 2px"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function openModal() {
+        console.log("Opening modal...");
+        document.getElementById("qrModal").classList.add("active");
+
+        // Prefill vehicle number from session
+        const vehicleInput = document.getElementById("vehicleNo");
+        const vehicleSessionValue =
+          vehicleInput.getAttribute("th:value") || vehicleInput.value; // Thymeleaf renders th:value
+        vehicleInput.value = vehicleSessionValue;
+
+        // Reset other form fields (exclude vehicleNo)
+        const form = document.getElementById("qrForm");
+        form.querySelectorAll("input, select, textarea").forEach((input) => {
+          if (input.id !== "vehicleNo") input.value = "";
+        });
+      }
+
+      function closeModal() {
+        document.getElementById("qrModal").classList.remove("active");
+      }
+
+      function openQrResult() {
+        console.log("Opening QR result modal...");
+        document.getElementById("qrResultModal").classList.add("active");
+      }
+
+      function closeQrResult() {
+        document.getElementById("qrResultModal").classList.remove("active");
+      }
+
+      // Form submission
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("qrForm");
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          console.log("Form submitted, generating QR code...");
+          generateQRCode();
+        });
+      });
+
+      // Generate QR code
+      async function generateQRCode() {
+        const form = document.getElementById("qrForm");
+        const submitBtn = form.querySelector('button[type="submit"]');
+
+        try {
+          submitBtn.textContent = "Generating...";
+          submitBtn.disabled = true;
+
+          const formData = new FormData(form);
+          console.log("Form data being sent:");
+          for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+          }
+
+          const response = await fetch("/generateQR", {
+            method: "POST",
+            body: formData,
+          });
+
+          console.log("Response status:", response.status);
+
+          if (!response.ok)
+            throw new Error(`HTTP error! status: ${response.status}`);
+
+          const data = await response.json();
+          console.log("QR response received:", data);
+
+          if (data.qrImage) {
+            closeModal();
+            const qrImageElement = document.getElementById("qrResultImage");
+            const qrStatusElement = document.getElementById("qrStatus");
+
+            let imageSrc = data.qrImage.startsWith("data:image/")
+              ? data.qrImage
+              : "data:image/png;base64," + data.qrImage;
+            qrImageElement.src = imageSrc;
+            qrStatusElement.textContent = `QR Code Generated - Unique ID: ${
+              data.uniqueId || "N/A"
+            }`;
+
+            qrImageElement.onload = () => (qrStatusElement.textContent += " ✓");
+            qrImageElement.onerror = () => {
+              console.error("QR image failed to load");
+              qrStatusElement.textContent = "❌ Failed to load QR image";
+              qrImageElement.style.display = "none";
+            };
+
+            openQrResult();
+          } else {
+            throw new Error("No QR image in response");
+          }
+        } catch (error) {
+          console.error("Error generating QR code:", error);
+          alert("Error generating QR code: " + error.message);
+        } finally {
+          submitBtn.textContent = "Generate QR";
+          submitBtn.disabled = false;
+        }
+      }
+
+      // Download QR
+      function downloadQr() {
+        const qrImage = document.getElementById("qrResultImage").src;
+        if (!qrImage) return alert("No QR code available to download");
+
+        const link = document.createElement("a");
+        link.href = qrImage;
+        link.download = `eqr-id-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      // Share QR (Web Share API fallback)
+      function shareQr() {
+        const qrImage = document.getElementById("qrResultImage").src;
+        if (!qrImage) return alert("No QR code available to share");
+
+        if (navigator.share) {
+          navigator
+            .share({
+              title: "My eQR ID Code",
+              text: "Check my digital identity QR code",
+              url: qrImage,
+            })
+            .catch(() => showShareOptions(qrImage));
+        } else {
+          showShareOptions(qrImage);
+        }
+      }
+
+      function showShareOptions(qrImage) {
+        const shareModal = document.createElement("div");
+        shareModal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10000;`;
+        shareModal.innerHTML = `
+        <div style="background:white;padding:30px;border-radius:15px;text-align:center;max-width:400px;width:90%;">
+            <h3 style="color:#2E3A8C;margin-top:0;">Share QR Code</h3>
+            <p style="margin-bottom:20px;">Choose how you'd like to share your QR code:</p>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+                <button onclick="copyQRToClipboard()" style="background:#2E3A8C;color:white;border:none;padding:12px;border-radius:8px;cursor:pointer;">Copy Image</button>
+                <button onclick="downloadForSharing()" style="background:#FF6B35;color:white;border:none;padding:12px;border-radius:8px;cursor:pointer;">Download & Share</button>
+                <button onclick="shareViaEmail()" style="background:#28a745;color:white;border:none;padding:12px;border-radius:8px;cursor:pointer;">Share via Email</button>
+                <button onclick="shareViaWhatsApp()" style="background:#25D366;color:white;border:none;padding:12px;border-radius:8px;cursor:pointer;">Share via WhatsApp</button>
+            </div>
+            <button onclick="closeShareModal()" style="background:#999;color:white;border:none;padding:10px 20px;border-radius:6px;margin-top:20px;width:100%;">Cancel</button>
+        </div>`;
+        document.body.appendChild(shareModal);
+        window.currentShareModal = shareModal;
+      }
+
+      async function copyQRToClipboard() {
+        try {
+          const qrImage = document.getElementById("qrResultImage").src;
+          const response = await fetch(qrImage);
+          const blob = await response.blob();
+          await navigator.clipboard.write([
+            new ClipboardItem({ [blob.type]: blob }),
+          ]);
+          showTempMessage("QR code copied!");
+          closeShareModal();
+        } catch {
+          showTempMessage("Failed to copy QR code", true);
+        }
+      }
+
+      function downloadForSharing() {
+        const qrImage = document.getElementById("qrResultImage").src;
+        const link = document.createElement("a");
+        link.href = qrImage;
+        link.download = "my-eqr-id-code.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showTempMessage("QR code downloaded!");
+        closeShareModal();
+      }
+
+      function shareViaEmail() {
+        window.location.href = `mailto:?subject=${encodeURIComponent(
+          "My eQR ID Code"
+        )}&body=${encodeURIComponent("Here is my digital identity QR code.")}`;
+        closeShareModal();
+      }
+
+      function shareViaWhatsApp() {
+        window.open(
+          `https://wa.me/?text=${encodeURIComponent(
+            "Check out my eQR ID digital identity code!"
+          )}`,
+          "_blank"
+        );
+        closeShareModal();
+      }
+
+      function closeShareModal() {
+        if (window.currentShareModal) {
+          document.body.removeChild(window.currentShareModal);
+          window.currentShareModal = null;
+        }
+      }
+
+      // Temporary message
+      function showTempMessage(message, isError = false) {
+        const div = document.createElement("div");
+        div.style.cssText = `position:fixed;top:20px;right:20px;background:${
+          isError ? "#dc3545" : "#28a745"
+        };color:white;padding:15px 20px;border-radius:8px;z-index:10001;`;
+        div.textContent = message;
+        document.body.appendChild(div);
+        setTimeout(() => {
+          if (div.parentNode) div.parentNode.removeChild(div);
+        }, 3000);
+      }
+
+      // Close modals on click outside or Escape key
+      document.addEventListener("click", (e) => {
+        if (e.target.id === "qrModal") closeModal();
+        if (e.target.id === "qrResultModal") closeQrResult();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeModal();
+          closeQrResult();
+        }
+      });
+
+      // Test QR
+      function testQR() {
+        const testBase64 =
+          "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+        document.getElementById("qrResultImage").src =
+          "data:image/png;base64," + testBase64;
+        document.getElementById("qrStatus").textContent = "Test QR Displayed";
+        openQrResult();
+        console.log("Test QR displayed");
+      }
+    </script>
+
+    <!-- Temporary test button - remove after testing -->
+  </body>
+</html>

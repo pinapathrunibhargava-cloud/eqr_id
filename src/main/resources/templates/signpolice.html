@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eQR ID Police Sign Up</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      display: flex;
+      height: 100vh;
+      background-color: #f8f9fc;
+    }
+
+    /* Left side – Form */
+    .signup-left {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fdfdfd;
+      padding: 40px;
+    }
+
+    .signup-card {
+      width: 100%;
+      max-width: 400px;
+      text-align: left;
+    }
+
+    .signup-card h2 {
+      color: #2E3A8C;
+      margin-bottom: 8px;
+      font-size: 1.6rem;
+    }
+
+    .signup-card p.subtitle {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    /* Messages */
+    #errorMessage,
+    #successMessage {
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    #errorMessage {
+      background-color: #f8d7da;
+      color: #842029;
+    }
+
+    #successMessage {
+      background-color: #d1e7dd;
+      color: #0f5132;
+    }
+
+    /* Input styling */
+    .signup-card input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+
+    .signup-card button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #2E3A8C;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .signup-card button:hover {
+      background: #1e2a75;
+    }
+
+    .toggle-text {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .toggle-text a {
+      color: #2E3A8C;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* Right side – Banner */
+    .signup-right {
+      flex: 1;
+      background: linear-gradient(rgba(46,58,140,0.85), rgba(46,58,140,0.85)),
+        url("images/a2.jpg") center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .signup-right .logo {
+      background: rgb(255, 255, 255);
+      color: #2E3A8C;
+      font-weight: bold;
+      font-size: 3.5rem;
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+
+    .signup-right h3 {
+      font-size: 2.3rem;
+      margin-bottom: 10px;
+    }
+
+    .signup-right p {
+      font-size: 1.05rem;
+      max-width: 350px;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        flex-direction: column;
+      }
+      .signup-right {
+        height: 250px;
+      }
+    }
+    /* Flash Messages */
+.flash-message {
+  display: flex;              /* flex container for centering */
+  justify-content: center;    /* horizontal center */
+  align-items: center;        /* vertical center */
+  text-align: center;         /* fallback for text */
+  padding: 12px;
+  margin: 15px 0;
+  border-radius: 8px;
+  font-weight: 500;
+  width: 100%;                /* fill the form width */
+  min-height: 40px;           /* ensures vertical centering */
+  box-sizing: border-box;
+}
+
+.flash-error {
+  background-color: #f8d7da;
+  color: #842029;
+}
+
+.flash-success {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+
+
+    
+  </style>
+</head>
+<body>
+
+  <!-- Left Form Section -->
+  <div class="signup-left">
+    <div class="signup-card">
+
+      <!-- Flash Messages using Thymeleaf -->
+    <!-- Flash Messages using Thymeleaf -->
+<div th:if="${error}" th:text="${error}" class="flash-message flash-error"></div>
+<div th:if="${success}" th:text="${success}" class="flash-message flash-success"></div>
+
+
+      <h2>Police Registration</h2>
+      <p class="subtitle">Fill in your official details to register as police.</p>
+
+      <form id="policeSignupForm" action="/police-signup" method="post">
+        <input type="text" name="full_name" placeholder="Full Name" required />
+        <input type="text" name="police_id" placeholder="Police ID" required />
+        <input type="text" name="department" placeholder="Department" required />
+        <input type="email" name="official_email" placeholder="Official Email" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <input type="password" name="confirm_password" placeholder="Confirm Password" required />
+        <button type="submit">Register</button>
+        <p class="toggle-text">Already have an account? <a th:href="@{/}">Login</a></p>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Right Image Section -->
+  <div class="signup-right">
+    <div class="logo">eQR</div>
+    <h3>Welcome to eQR ID</h3>
+    <p>Join thousands of officers using eQR for efficient and secure police registration.</p>
+  </div>
+
+</body>
+</html>

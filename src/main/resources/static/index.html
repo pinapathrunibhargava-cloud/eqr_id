@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eQR ID Login</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body,
+      html {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 350px;
+      }
+
+      .login-card {
+        width: 350px;
+        background: rgba(252, 252, 252, 0.95);
+        padding: 30px 20px;
+        border-radius: 15px;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .toggle-tabs {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #ccc;
+      }
+
+      .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #555;
+      }
+
+      .tab.active {
+        border-bottom: 3px solid #0066cc;
+        color: #0066cc;
+      }
+
+      .login-form input {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border: 1px solid #c95656;
+        background-color: #beb5b5;
+        color: #fff;
+      }
+
+      .login-form button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        border-radius: 8px;
+        border: none;
+        background-color: #0066cc;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .hidden {
+        display: none;
+      }
+      .toggle-text {
+        color: #131313;
+        padding-top: 15px;
+      }
+
+      .background-slideshow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      .slide {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+      }
+
+      .slide.active {
+        opacity: 1;
+      }
+
+      #successMessage,
+      #errorMessage {
+        display: none;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+      }
+
+      #successMessage {
+        background-color: #e6ffe6;
+        color: #008000;
+        border: 1px solid #ccffcc;
+      }
+
+      #errorMessage {
+        background-color: #ffe6e6;
+        color: #b30000;
+        border: 1px solid #ffcccc;
+      }
+      .site-subtitle {
+        font-size: 0.9rem;
+        color: #333;
+        margin-bottom: 25px;
+      }
+      .site-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #004e92;
+        margin-bottom: 8px;
+      }
+      .public-search {
+        margin: 25px auto;
+        text-align: center;
+      }
+
+      .search-label {
+        color: white;
+        font-weight: 600;
+        margin-right: 10px;
+      }
+
+      .public-search {
+        margin: 20px auto;
+        text-align: center;
+      }
+
+      .search-label {
+        color: #fff;
+        font-weight: 600;
+        margin-right: 10px;
+      }
+
+      .public-search form {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 25px;
+        padding: 5px 15px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .public-search input {
+        border: none;
+        outline: none;
+        padding: 10px 12px;
+        font-size: 14px;
+        border-radius: 25px;
+        width: 200px;
+      }
+
+      .search-btn {
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 18px;
+        color: #007bff;
+        padding-left: 5px;
+      }
+
+      .search-btn:hover {
+        color: #004c99;
+      }
+
+      .error-message {
+        color: #ff3333;
+        margin-top: 10px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background-slideshow">
+      <div
+        class="slide active"
+        style="background-image: url('images/a1.jpg')"
+      ></div>
+      <div class="slide" style="background-image: url('images/a2.jpg')"></div>
+      <div class="slide" style="background-image: url('images/a3.jpg')"></div>
+    </div>
+
+    <div class="login-card">
+      <h1 class="site-title">eQR ID</h1>
+      <p class="site-subtitle">Secure Access Portal</p>
+      <div
+        class="vehicle-search"
+        style="text-align: center; margin-bottom: 20px"
+      >
+        <form
+          action="/search-vehicle"
+          method="post"
+          style="display: inline-flex; align-items: center"
+        >
+          <input
+            type="text"
+            name="vehicleNo"
+            placeholder="Enter Vehicle Number"
+            required
+            style="
+              padding: 10px;
+              border-radius: 8px 0 0 8px;
+              border: 1px solid #ccc;
+              width: 200px;
+            "
+          />
+          <button
+            type="submit"
+            style="
+              padding: 10px 15px;
+              border-radius: 0 8px 8px 0;
+              border: 1px solid #ccc;
+              background-color: #0066cc;
+              color: white;
+              cursor: pointer;
+            "
+          >
+            🔍
+          </button>
+        </form>
+
+        <!-- Error Message -->
+        <div
+          style="color: red; margin-top: 10px"
+          th:if="${vehicleError}"
+          th:text="${vehicleError}"
+        ></div>
+      </div>
+
+      <div id="successMessage" class="message"></div>
+
+      <!-- Toggle Tabs -->
+      <div class="toggle-tabs">
+        <div class="tab active" id="userTab">User Login</div>
+        <div class="tab" id="policeTab">Police Login</div>
+      </div>
+
+      <!-- User Login Form -->
+      <form id="userForm" class="login-form" action="/login" method="post">
+        <input type="email" name="email" placeholder="Email" required />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Login</button>
+        <p class="toggle-text">
+          Don't have an account?
+          <span id="showSignup" style="color: #1216f2"
+            ><a href="/signup" style="text-decoration: none; color: #0066cc"
+              >Sign Up</a
+            ></span
+          >
+        </p>
+      </form>
+
+      <!-- Police Login Form -->
+      <form
+        id="policeForm"
+        class="login-form hidden"
+        action="/police-login"
+        method="post"
+      >
+        <input
+          type="email"
+          name="official_email"
+          placeholder="Official Email"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Login</button>
+        <p class="toggle-text">
+          Don't have an account?
+          <span id="showSignupPolice" style="color: #1216f2"
+            ><a
+              href="/police-signup"
+              style="text-decoration: none; color: #0066cc"
+              >Sign Up</a
+            ></span
+          >
+        </p>
+      </form>
+    </div>
+
+    <script>
+      // Tabs
+      const userTab = document.getElementById("userTab");
+      const policeTab = document.getElementById("policeTab");
+      const userForm = document.getElementById("userForm");
+      const policeForm = document.getElementById("policeForm");
+
+      userTab.addEventListener("click", () => {
+        userTab.classList.add("active");
+        policeTab.classList.remove("active");
+        userForm.classList.remove("hidden");
+        policeForm.classList.add("hidden");
+      });
+
+      policeTab.addEventListener("click", () => {
+        policeTab.classList.add("active");
+        userTab.classList.remove("active");
+        policeForm.classList.remove("hidden");
+        userForm.classList.add("hidden");
+      });
+
+      // Background Slideshow
+      const slides = document.querySelectorAll(".slide");
+      let current = 0;
+      function nextSlide() {
+        slides[current].classList.remove("active");
+        current = (current + 1) % slides.length;
+        slides[current].classList.add("active");
+      }
+      setInterval(nextSlide, 5000);
+
+      // Display messages from URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const success = urlParams.get("success");
+      const error = urlParams.get("error");
+
+      const successDiv = document.getElementById("successMessage");
+      const errorDiv = document.getElementById("errorMessage");
+
+      if (success === "AccountCreated") {
+        successDiv.textContent = "Account created successfully! Please login.";
+        successDiv.style.display = "block";
+
+        // Auto-select tab based on account type
+        if (urlParams.get("type") === "police") {
+          policeTab.click();
+        } else {
+          userTab.click();
+        }
+      }
+
+      if (error) {
+        let message = "";
+        let type = "user"; // default to user
+        switch (error) {
+          case "PasswordMismatch":
+            message = "Passwords do not match!";
+            break;
+          case "EmailExists":
+            message = "Email already exists!";
+            break;
+          case "InvalidPoliceDetails":
+            message = "Police ID or Official Email is invalid!";
+            type = "police";
+            break;
+          case "DatabaseError":
+            message = "Database error occurred!";
+            break;
+          case "InvalidCredentials":
+            message = "Invalid email or password!";
+            break;
+          case "InvalidPoliceCredentials":
+            message = "Invalid police credentials!";
+            type = "police";
+            break;
+          default:
+            message = error;
+        }
+        errorDiv.textContent = message;
+        errorDiv.style.display = "block";
+
+        // Auto-select tab based on error type
+        if (type === "police") {
+          policeTab.click();
+        } else {
+          userTab.click();
+        }
+      }
+      window.onload = function () {
+        // 🔹 Parse URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const error = params.get("error");
+        const success = params.get("success");
+        const messageBox = document.getElementById("messageBox");
+
+        if (error) {
+          messageBox.textContent =
+            error === "InvalidCredentials"
+              ? "❌ Invalid email or password!"
+              : "⚠️ Login error, please try again!";
+          messageBox.classList.add("error");
+          messageBox.style.display = "block";
+        } else if (success) {
+          messageBox.textContent = success;
+          messageBox.classList.add("success");
+          messageBox.style.display = "block";
+        }
+
+        // Optional: hide message automatically after 5 seconds
+        setTimeout(() => {
+          messageBox.style.display = "none";
+        }, 5000);
+      };
+      // Auto-hide messages after 5 seconds
+      setTimeout(function () {
+        successDiv.style.display = "none";
+        errorDiv.style.display = "none";
+      }, 5000);
+    </script>
+  </body>
+</html>

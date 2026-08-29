@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vehicle Info | eQR ID</title>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f0f4f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .info-card {
+        background: white;
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 350px;
+      }
+      h2 {
+        color: #0066cc;
+        margin-bottom: 20px;
+      }
+      p {
+        font-size: 16px;
+        margin: 8px 0;
+        color: #333;
+      }
+      .error-message {
+        color: red;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+      a {
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        color: white;
+        background-color: #0066cc;
+        padding: 10px 20px;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="info-card">
+      <h2>Vehicle Limited Info</h2>
+
+      <!-- Error message if vehicle not found -->
+      <div
+        th:if="${vehicleError}"
+        class="error-message"
+        th:text="${vehicleError}"
+      ></div>
+
+      <!-- Vehicle info only shown if uniqueId exists -->
+      <div th:if="${uniqueId}">
+        <p><strong>ID:</strong> <span th:text="${uniqueId}"></span></p>
+        <p><strong>Name:</strong> <span th:text="${fullName}"></span></p>
+        <p><strong>Age:</strong> <span th:text="${age}"></span></p>
+        <p>
+          <strong>Blood Group:</strong> <span th:text="${bloodGroup}"></span>
+        </p>
+        <p><strong>Address:</strong> <span th:text="${address}"></span></p>
+        <p>
+          <strong>Nearest Police Station:</strong>
+          <span th:text="${nearestPoliceStation}"></span>
+        </p>
+      </div>
+
+      <a href="/">Back to Search</a>
+    </div>
+  </body>
+</html>

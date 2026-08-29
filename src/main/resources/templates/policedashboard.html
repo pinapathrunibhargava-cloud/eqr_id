@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Police Dashboard | eQR ID</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* General Styles */
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f4f6ff;
+        margin: 0;
+        padding: 0;
+      }
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+      }
+      a {
+        text-decoration: none;
+      }
+
+      /* Header */
+      header {
+        background-color: #2e3a8c;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 40px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      header h1 {
+        font-size: 1.6rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* Container */
+      .dashboard-container {
+        padding: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Police Info Card */
+      .police-info-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 40px;
+        border-left: 4px solid #2e3a8c;
+      }
+      .police-info-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px;
+        flex-wrap: wrap;
+      }
+      .police-info-left {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+      }
+      .police-info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .police-info-item i {
+        font-size: 1.2rem;
+        color: #2e3a8c;
+        width: 24px;
+        text-align: center;
+      }
+      .police-info-label {
+        font-size: 0.85rem;
+        color: #666;
+        font-weight: 600;
+      }
+      .police-info-value {
+        font-size: 1rem;
+        color: #2e3a8c;
+        font-weight: 700;
+      }
+
+      .police-info-right {
+        margin-top: 10px;
+      }
+      .logout-btn {
+        background: #ff6b35;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+      }
+      .logout-btn:hover {
+        background: #e95a2e;
+      }
+
+      /* Search Section */
+      .search-section {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+      }
+      .search-section h2 {
+        color: #2e3a8c;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .search-form {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+      }
+      .form-group {
+        flex: 1;
+        min-width: 220px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+        box-sizing: border-box;
+      }
+      .btn {
+        background-color: #2e3a8c;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.3s;
+        height: 44px;
+      }
+      .btn:hover {
+        background-color: #1f2766;
+      }
+
+      /* Messages */
+      .error-message,
+      .success-message {
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: none;
+      }
+      .error-message {
+        background: #ffe6e6;
+        color: #d63031;
+        border-left: 4px solid #d63031;
+      }
+      .success-message {
+        background: #e6ffe6;
+        color: #00b894;
+        border-left: 4px solid #00b894;
+      }
+
+      /* Results Section */
+      .results-section.active {
+        display: block;
+      }
+      .user-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 20px;
+      }
+      .user-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+      .user-card-title {
+        color: #2e3a8c;
+        font-size: 1.4rem;
+      }
+
+      .user-details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+      }
+      .detail-item {
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #2e3a8c;
+      }
+      .detail-item label {
+        font-weight: 600;
+        color: #2e3a8c;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+      }
+      .detail-item span {
+        color: #333;
+        font-size: 1rem;
+      }
+      .detail-item.full-width {
+        grid-column: span 2;
+      }
+      .emergency-contact {
+        border-left-color: #e74c3c;
+        background: #fff5f5;
+      }
+      .emergency-contact label {
+        color: #e74c3c;
+      }
+      .police-station {
+        border-left-color: #e84393;
+        background: #fff0f6;
+      }
+      .police-station label {
+        color: #e84393;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 60px 40px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      }
+      .no-results i {
+        font-size: 4rem;
+        color: #ccc;
+        margin-bottom: 20px;
+      }
+      .no-results h3 {
+        color: #666;
+        margin-bottom: 10px;
+      }
+      .no-results p {
+        color: #888;
+        margin-bottom: 5px;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <h1>
+        <i class="fa-solid fa-shield-halved"></i> eQR ID - Police Dashboard
+      </h1>
+      <div class="logout">
+        <a href="logout" class="logout-btn">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard-container">
+      <!-- Police Info Card -->
+      <div class="police-info-card">
+        <div class="police-info-content">
+          <div class="police-info-left">
+            <div class="police-info-item">
+              <i class="fa-solid fa-user-shield"></i>
+              <div>
+                <div class="police-info-label">Officer</div>
+                <div class="police-info-value" th:text="${session.policeName}">
+                  Officer Name
+                </div>
+              </div>
+            </div>
+            <div class="police-info-item">
+              <i class="fa-solid fa-id-card"></i>
+              <div>
+                <div class="police-info-label">Police ID</div>
+                <div class="police-info-value" th:text="${session.policeId}">
+                  ID12345
+                </div>
+              </div>
+            </div>
+            <div class="police-info-item">
+              <i class="fa-solid fa-building"></i>
+              <div>
+                <div class="police-info-label">Department</div>
+                <div
+                  class="police-info-value"
+                  th:text="${session.policeDepartment}"
+                >
+                  Department Name
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="police-info-right">
+            <a href="/police-logout" class="logout-btn">
+              <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Section -->
+      <div class="search-section">
+        <h2><i class="fa-solid fa-magnifying-glass"></i> Search QR Records</h2>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <form class="search-form" id="searchForm">
+          <div class="form-group">
+            <label for="uniqueId"
+              ><i class="fa-solid fa-id-card"></i> Unique ID</label
+            >
+            <input
+              type="text"
+              id="uniqueId"
+              name="uniqueId"
+              placeholder="Enter Unique ID"
+            />
+          </div>
+
+          <div style="text-align: center; padding: 0 10px; align-self: center">
+            <span style="color: #666; font-weight: 600">OR</span>
+          </div>
+
+          <div class="form-group">
+            <label for="vehicleNo"
+              ><i class="fa-solid fa-car"></i> Vehicle Number</label
+            >
+            <input
+              type="text"
+              id="vehicleNo"
+              name="vehicleNo"
+              placeholder="Enter Vehicle Number"
+            />
+          </div>
+
+          <button type="submit" class="btn">
+            <i class="fa-solid fa-search"></i> Search Records
+          </button>
+        </form>
+      </div>
+
+      <!-- Results Section -->
+      <div class="results-section" id="resultsSection">
+        <div class="loading" id="loadingIndicator" style="display: none">
+          <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+          <p style="margin-top: 15px">Searching QR records database...</p>
+        </div>
+        <div id="searchResults"></div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const searchForm = document.getElementById("searchForm");
+        const resultsSection = document.getElementById("resultsSection");
+        const searchResults = document.getElementById("searchResults");
+        const loadingIndicator = document.getElementById("loadingIndicator");
+        const errorMessage = document.getElementById("errorMessage");
+        const successMessage = document.getElementById("successMessage");
+
+        function showError(message) {
+          errorMessage.textContent = message;
+          errorMessage.style.display = "block";
+        }
+
+        function showSuccess(message) {
+          successMessage.textContent = message;
+          successMessage.style.display = "block";
+        }
+
+        function hideMessages() {
+          errorMessage.style.display = "none";
+          successMessage.style.display = "none";
+        }
+
+        function renderUser(user, searchBy) {
+          const html = `
+      <div class="user-card">
+        <div class="user-card-header">
+          <h3 class="user-card-title"><i class="fa-solid fa-user"></i> User Details</h3>
+          <div class="search-info"><i class="fa-solid fa-info-circle"></i> Found by: ${searchBy}</div>
+        </div>
+        <div class="user-details-grid">
+          <div class="detail-item"><label><i class="fa-solid fa-id-card"></i> Unique ID</label><span>${
+            user.uniqueId || "N/A"
+          }</span></div>
+          <div class="detail-item"><label><i class="fa-solid fa-user"></i> Full Name</label><span>${
+            user.fullName || "N/A"
+          }</span></div>
+          <div class="detail-item"><label><i class="fa-solid fa-calendar"></i> Age</label><span>${
+            user.age || "N/A"
+          }</span></div>
+          <div class="detail-item"><label><i class="fa-solid fa-venus-mars"></i> Gender</label><span>${
+            user.gender || "N/A"
+          }</span></div>
+          <div class="detail-item"><label><i class="fa-solid fa-droplet"></i> Blood Group</label><span>${
+            user.bloodGroup || "N/A"
+          }</span></div>
+          <div class="detail-item"><label><i class="fa-solid fa-car"></i> Vehicle Number</label><span>${
+            user.vehicleNo || "N/A"
+          }</span></div>
+          <div class="detail-item"><label><i class="fa-solid fa-address-card"></i> Aadhaar Number</label><span>${
+            user.aadhaar || "N/A"
+          }</span></div>
+          <div class="detail-item emergency-contact"><label><i class="fa-solid fa-phone-emergency"></i> Emergency Contact</label><span>${
+            user.emergencyContact || "N/A"
+          }</span></div>
+          <div class="detail-item police-station"><label><i class="fa-solid fa-building-shield"></i> Nearest Police Station</label><span>${
+            user.nearestPoliceStation || "N/A"
+          }</span></div>
+          <div class="detail-item full-width"><label><i class="fa-solid fa-location-dot"></i> Address</label><span>${
+            user.address || "N/A"
+          }</span></div>
+          <div class="detail-item full-width"><label><i class="fa-solid fa-clock"></i> Record Created</label><span>${
+            user.createdAt ? new Date(user.createdAt).toLocaleString() : "N/A"
+          }</span></div>
+        </div>
+      </div>
+    `;
+          searchResults.innerHTML = html;
+        }
+
+        function renderNoResults(message) {
+          searchResults.innerHTML = `
+      <div class="no-results">
+        <i class="fa-solid fa-user-slash"></i>
+        <h3>No Records Found</h3>
+        <p>${message}</p>
+        <p>Please check the search criteria and try again.</p>
+      </div>
+    `;
+        }
+
+        searchForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          hideMessages();
+          searchResults.innerHTML = "";
+
+          const uniqueId = document.getElementById("uniqueId").value.trim();
+          const vehicleNo = document.getElementById("vehicleNo").value.trim();
+
+          if (!uniqueId && !vehicleNo) {
+            showError("Please enter either Unique ID or Vehicle Number");
+            return;
+          }
+
+          loadingIndicator.style.display = "block";
+          resultsSection.classList.add("active");
+
+          try {
+            const params = new URLSearchParams();
+            if (uniqueId) params.append("uniqueId", uniqueId);
+            if (vehicleNo) params.append("vehicleNo", vehicleNo);
+
+            const response = await fetch(
+              "/api/police/search?" + params.toString()
+            );
+            const data = await response.json();
+            loadingIndicator.style.display = "none";
+
+            if (!response.ok) {
+              showError(data.error || "Search failed");
+              renderNoResults(data.error || "No user found");
+              return;
+            }
+
+            if (data.found) {
+              renderUser(data.userDetails, data.searchBy);
+              showSuccess("User record found in QR database!");
+            } else {
+              renderNoResults(
+                data.error || "No user found with the provided criteria"
+              );
+            }
+          } catch (err) {
+            loadingIndicator.style.display = "none";
+            console.error("Search error:", err);
+            showError("Search failed: " + (err.message || err));
+            renderNoResults("Search encountered an error");
+          }
+        });
+
+        // Clear results/messages when inputs change
+        document
+          .getElementById("uniqueId")
+          .addEventListener("input", function () {
+            hideMessages();
+            searchResults.innerHTML = "";
+          });
+        document
+          .getElementById("vehicleNo")
+          .addEventListener("input", function () {
+            hideMessages();
+            searchResults.innerHTML = "";
+          });
+      });
+    </script>
+  </body>
+</html>
